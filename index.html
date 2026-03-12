@@ -1,101 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Letter Studio</title>
-<link rel="stylesheet" href="main.css" />
-<link rel="script" href="script.js" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Editor Scaffold</title>
+  <link rel="stylesheet" href="main.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-
-  <header>
-    <h1>write a letter</h1>
-    <p>whoever you want</p>
-  </header>
-
-  <div class="workspace">
-
-    <!-- TOOLBAR -->
-    <aside class="toolbar">
-
-      <div class="tool-group">
-        <span class="tool-section-title">font</span>
-        <select class="font-select" id="fontFace" onchange="applyFont(this.value)">
-          <option value="Georgia, serif">Georgia</option>
-          <option value="'Times New Roman', serif">Times New Roman</option>
-          <option value="Arial, sans-serif">Arial</option>
-          <option value="'Courier New', monospace">Courier New</option>
-        </select>
-        <select class="size-select" id="fontSize" onchange="applySize(this.value)">
-          <option value="13">Small — 13pt</option>
-          <option value="15" selected>Normal — 15pt</option>
-          <option value="17">Large — 17pt</option>
-          <option value="20">XL — 20pt</option>
-        </select>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">Editor Scaffold</p>
+        <h1>Document workspace</h1>
       </div>
 
-      <div class="tool-group">
-        <span class="tool-section-title">style</span>
-        <div class="tool-row">
-          <button class="tool-btn" onclick="fmt('bold')"><b>B</b></button>
-          <button class="tool-btn" onclick="fmt('italic')"><i>I</i></button>
-          <button class="tool-btn" onclick="fmt('underline')"><u>U</u></button>
-        </div>
+      <div class="top-controls">
+        <label class="top-control document-name">
+          <span>Document name</span>
+          <input id="documentName" type="text" value="Untitled document" placeholder="Untitled document">
+        </label>
+
+        <button id="saveButton" class="top-action" type="button">Save</button>
+        <button id="printButton" class="top-action" type="button">Print</button>
       </div>
+    </header>
 
-      <div class="tool-group">
-        <span class="tool-section-title">align</span>
-        <div class="align-btns">
-          <button class="align-btn" onclick="align('left')">L</button>
-          <button class="align-btn" onclick="align('center')">C</button>
-          <button class="align-btn" onclick="align('right')">R</button>
-          <button class="align-btn" onclick="align('justify')">J</button>
-        </div>
-      </div>
+    <main class="editor-layout">
+      <aside class="tool-column tool-column-left" aria-label="Left editing controls">
+        <button id="undoButton" class="tool-card" type="button">
+          <span class="tool-icon">UN</span>
+          <span class="tool-label">Undo</span>
+        </button>
 
-      <div class="tool-group">
-        <span class="tool-section-title">ink color</span>
-        <div class="color-row">
-          <div class="color-dot active" style="background:#000000" title="Black"   onclick="applyColor('#000000',this)"></div>
-          <div class="color-dot"        style="background:#1a3a8a" title="Blue"    onclick="applyColor('#1a3a8a',this)"></div>
-          <div class="color-dot"        style="background:#1a4a2e" title="Green"   onclick="applyColor('#1a4a2e',this)"></div>
-          <div class="color-dot"        style="background:#7a1f1f" title="Red"     onclick="applyColor('#7a1f1f',this)"></div>
-          <div class="color-dot"        style="background:#5a3a7a" title="Purple"  onclick="applyColor('#5a3a7a',this)"></div>
-        </div>
-      </div>
+        <button id="redoButton" class="tool-card" type="button">
+          <span class="tool-icon">RE</span>
+          <span class="tool-label">Redo</span>
+        </button>
 
-      <hr class="tool-divider">
+        <label class="tool-card" for="fontFamily">
+          <span class="tool-icon">Ff</span>
+          <span class="tool-label">Font family</span>
+          <select id="fontFamily">
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+          </select>
+        </label>
 
-      <button class="export-btn" onclick="exportPDF()">Export as PDF</button>
-      <button class="clear-btn"  onclick="clearLetter()">Clear Letter</button>
-
-    </aside>
-
-    <!-- PAPER -->
-    <div class="paper-wrap">
-      <div class="paper" id="letterPaper">
-
-        <input class="letter-date" id="letterDate" type="text" placeholder="Date">
-        <input class="letter-to"   id="letterTo"   type="text" placeholder="Dear ___,">
-
-        <div class="letter-body" id="letterBody"
-          contenteditable="true"
-          data-placeholder="Begin your letter here…"
-          oninput="updateWordCount()"
-          spellcheck="true">
+        <div class="tool-card">
+          <span class="tool-icon">SZ</span>
+          <span class="tool-label">Font size</span>
+          <div class="tool-pair">
+            <button id="fontSizeDown" type="button">Down</button>
+            <button id="fontSizeUp" type="button">Up</button>
+          </div>
         </div>
 
-        <input class="letter-sign" id="letterSign" type="text" placeholder="Sincerely,">
-        <input class="letter-name" id="letterName" type="text" placeholder="Your name">
+        <label class="tool-card toggle-card" for="boldToggle">
+          <span class="tool-icon">B</span>
+          <span class="tool-label">Bold</span>
+          <input id="boldToggle" type="checkbox">
+        </label>
 
-      </div>
-      <div class="word-count" id="wordCount">0 words</div>
-    </div>
+        <label class="tool-card toggle-card" for="italicToggle">
+          <span class="tool-icon">I</span>
+          <span class="tool-label">Italic</span>
+          <input id="italicToggle" type="checkbox">
+        </label>
 
+        <label class="tool-card toggle-card" for="underlineToggle">
+          <span class="tool-icon">U</span>
+          <span class="tool-label">Underline</span>
+          <input id="underlineToggle" type="checkbox">
+        </label>
+
+        <label class="tool-card" for="highlightColor">
+          <span class="tool-icon">BG</span>
+          <span class="tool-label">Highlight</span>
+          <input id="highlightColor" type="color" value="#fff2a8">
+        </label>
+
+        <label class="tool-card" for="textColor">
+          <span class="tool-icon">TC</span>
+          <span class="tool-label">Text color</span>
+          <input id="textColor" type="color" value="#1a1a1a">
+        </label>
+
+        <div class="tool-card radio-card">
+          <span class="tool-icon">AL</span>
+          <span class="tool-label">Alignment</span>
+          <label><input type="radio" name="alignment" value="left" checked> Left</label>
+          <label><input type="radio" name="alignment" value="center"> Center</label>
+          <label><input type="radio" name="alignment" value="right"> Right</label>
+        </div>
+      </aside>
+
+      <section class="document-stage" aria-label="Document canvas">
+        <div class="page-chrome">
+          <div class="page-meta">
+            <span id="pageTitle">Untitled document</span>
+            <span id="saveStatus">Not saved</span>
+          </div>
+
+          <article
+            id="editorPage"
+            class="editor-page"
+            contenteditable="true"
+            spellcheck="true"
+            data-placeholder="Start writing here..."
+          ></article>
+        </div>
+      </section>
+
+      <aside class="tool-column tool-column-right" aria-label="Right editing controls">
+        <label class="tool-card" for="lineSpacing">
+          <span class="tool-icon">LS</span>
+          <span class="tool-label">Line spacing</span>
+          <input id="lineSpacing" type="range" min="1" max="3" step="0.1" value="1.5">
+          <output id="lineSpacingValue" for="lineSpacing">1.5x</output>
+        </label>
+
+        <label class="tool-card toggle-card" for="checklistToggle">
+          <span class="tool-icon">CL</span>
+          <span class="tool-label">Checklist</span>
+          <input id="checklistToggle" type="checkbox">
+        </label>
+
+        <label class="tool-card toggle-card" for="bulletToggle">
+          <span class="tool-icon">BL</span>
+          <span class="tool-label">Bullet list</span>
+          <input id="bulletToggle" type="checkbox">
+        </label>
+
+        <label class="tool-card toggle-card" for="numberToggle">
+          <span class="tool-icon">NL</span>
+          <span class="tool-label">Number list</span>
+          <input id="numberToggle" type="checkbox">
+        </label>
+
+        <div class="tool-card">
+          <span class="tool-icon">IN</span>
+          <span class="tool-label">Indent</span>
+          <div class="tool-pair">
+            <button id="indentDecrease" type="button">Decrease</button>
+            <button id="indentIncrease" type="button">Increase</button>
+          </div>
+        </div>
+
+        <button id="clearFormatting" class="tool-card" type="button">
+          <span class="tool-icon">CF</span>
+          <span class="tool-label">Clear formatting</span>
+        </button>
+
+        <label class="tool-card" for="insertImage">
+          <span class="tool-icon">IM</span>
+          <span class="tool-label">Insert image</span>
+          <input id="insertImage" type="file" accept="image/*">
+        </label>
+
+        <label class="tool-card" for="insertLink">
+          <span class="tool-icon">LK</span>
+          <span class="tool-label">Insert link</span>
+          <input id="insertLink" type="url" placeholder="https://example.com">
+        </label>
+      </aside>
+    </main>
   </div>
-
 </body>
 </html>

@@ -1,88 +1,192 @@
-function fmt(cmd) {
-      document.getElementById('letterBody').focus();
-      document.execCommand(cmd, false, null);
+const editorPage = document.getElementById("editorPage");
+const documentNameInput = document.getElementById("documentName");
+const pageTitle = document.getElementById("pageTitle");
+const saveStatus = document.getElementById("saveStatus");
+const lineSpacing = document.getElementById("lineSpacing");
+const lineSpacingValue = document.getElementById("lineSpacingValue");
+const fontFamily = document.getElementById("fontFamily");
+const textColor = document.getElementById("textColor");
+const highlightColor = document.getElementById("highlightColor");
+const listToggles = ["checklistToggle", "bulletToggle", "numberToggle"];
+
+let currentFontSize = 18;
+
+function focusEditor() {
+  editorPage.focus();
+}
+
+function runCommand(command, value = null) {
+  focusEditor();
+  document.execCommand(command, false, value);
+}
+
+function setSaveStatus(text) {
+  saveStatus.textContent = text;
+}
+
+function syncDocumentTitle() {
+  const title = documentNameInput.value.trim() || "Untitled document";
+  pageTitle.textContent = title;
+  document.title = `${title} | Document Editor Scaffold`;
+}
+
+function markDirty() {
+  setSaveStatus("Unsaved changes");
+}
+
+function setFontSize(nextSize) {
+  currentFontSize = Math.max(10, Math.min(48, nextSize));
+  editorPage.style.fontSize = `${currentFontSize}px`;
+  markDirty();
+}
+
+function setAlignment(alignment) {
+  editorPage.style.textAlign = alignment;
+  markDirty();
+}
+
+function toggleExclusiveList(activeId, command) {
+  listToggles.forEach((id) => {
+    if (id !== activeId) {
+      document.getElementById(id).checked = false;
     }
+  });
 
-    function align(dir) {
-      document.getElementById('letterBody').focus();
-      document.execCommand('justify' + dir.charAt(0).toUpperCase() + dir.slice(1), false, null);
+  runCommand(command);
+  markDirty();
+}
+
+document.getElementById("undoButton").addEventListener("click", () => runCommand("undo"));
+document.getElementById("redoButton").addEventListener("click", () => runCommand("redo"));
+
+document.getElementById("saveButton").addEventListener("click", () => {
+  syncDocumentTitle();
+  setSaveStatus(`Saved ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`);
+});
+
+document.getElementById("printButton").addEventListener("click", () => window.print());
+
+document.getElementById("fontSizeUp").addEventListener("click", () => setFontSize(currentFontSize + 2));
+document.getElementById("fontSizeDown").addEventListener("click", () => setFontSize(currentFontSize - 2));
+
+document.getElementById("boldToggle").addEventListener("change", () => {
+  runCommand("bold");
+  markDirty();
+});
+
+document.getElementById("italicToggle").addEventListener("change", () => {
+  runCommand("italic");
+  markDirty();
+});
+
+document.getElementById("underlineToggle").addEventListener("change", () => {
+  runCommand("underline");
+  markDirty();
+});
+
+fontFamily.addEventListener("change", () => {
+  editorPage.style.fontFamily = fontFamily.value;
+  markDirty();
+});
+
+textColor.addEventListener("input", () => {
+  runCommand("foreColor", textColor.value);
+  markDirty();
+});
+
+highlightColor.addEventListener("input", () => {
+  runCommand("hiliteColor", highlightColor.value);
+  markDirty();
+});
+
+document.querySelectorAll('input[name="alignment"]').forEach((radio) => {
+  radio.addEventListener("change", () => {
+    if (radio.checked) {
+      setAlignment(radio.value);
     }
+  });
+});
 
-    function applyFont(val) {
-      document.getElementById('letterBody').style.fontFamily = val;
-    }
+lineSpacing.addEventListener("input", () => {
+  editorPage.style.lineHeight = lineSpacing.value;
+  lineSpacingValue.textContent = `${lineSpacing.value}x`;
+  markDirty();
+});
 
-    function applySize(val) {
-      document.getElementById('letterBody').style.fontSize = val + 'px';
-    }
+document.getElementById("checklistToggle").addEventListener("change", (event) => {
+  if (!event.target.checked) {
+    return;
+  }
 
-    function applyColor(color, el) {
-      document.getElementById('letterBody').focus();
-      document.execCommand('foreColor', false, color);
-      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-      el.classList.add('active');
-    }
+  toggleExclusiveList("checklistToggle", "insertUnorderedList");
+  document.execCommand("insertHTML", false, "<li><input type='checkbox'> Checklist item</li>");
+});
 
-    function updateWordCount() {
-      const text = document.getElementById('letterBody').innerText.trim();
-      const words = text ? text.split(/\s+/).length : 0;
-      document.getElementById('wordCount').textContent = words + (words === 1 ? ' word' : ' words');
-    }
+document.getElementById("bulletToggle").addEventListener("change", (event) => {
+  if (!event.target.checked) {
+    return;
+  }
 
-    function clearLetter() {
-      if (!confirm('Clear the entire letter?')) return;
-      ['letterDate', 'letterTo', 'letterSign', 'letterName'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      document.getElementById('letterBody').innerHTML = '';
-      updateWordCount();
-    }
+  toggleExclusiveList("bulletToggle", "insertUnorderedList");
+});
 
-    async function exportPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+document.getElementById("numberToggle").addEventListener("change", (event) => {
+  if (!event.target.checked) {
+    return;
+  }
 
-      const margin = 72;
-      const pageW  = doc.internal.pageSize.getWidth();
-      const pageH  = doc.internal.pageSize.getHeight();
-      const contentW = pageW - margin * 2;
-      let y = margin;
+  toggleExclusiveList("numberToggle", "insertOrderedList");
+});
 
-      function addText(text, opts = {}) {
-        if (!text) return;
-        const { size = 12, style = 'normal', color = [0,0,0], gap = 8 } = opts;
-        doc.setFontSize(size);
-        doc.setFont('Times', style);
-        doc.setTextColor(...color);
-        const lines = doc.splitTextToSize(text, contentW);
-        lines.forEach(line => {
-          if (y + size + 4 > pageH - margin) { doc.addPage(); y = margin; }
-          doc.text(line, margin, y);
-          y += size * 1.6;
-        });
-        y += gap;
-      }
+document.getElementById("indentIncrease").addEventListener("click", () => {
+  runCommand("indent");
+  markDirty();
+});
 
-      const date = document.getElementById('letterDate').value.trim();
-      const to   = document.getElementById('letterTo').value.trim();
-      const body = document.getElementById('letterBody').innerText.trim();
-      const sign = document.getElementById('letterSign').value.trim();
-      const name = document.getElementById('letterName').value.trim();
+document.getElementById("indentDecrease").addEventListener("click", () => {
+  runCommand("outdent");
+  markDirty();
+});
 
-      if (date) addText(date, { style: 'italic', gap: 20 });
-      if (to)   addText(to,  { gap: 16 });
-      if (body) {
-        body.split(/\n+/).forEach(p => {
-          if (p.trim()) addText(p.trim(), { gap: 6 });
-          else y += 10;
-        });
-      }
-      y += 16;
-      if (sign) addText(sign, { style: 'italic', gap: 4 });
-      if (name) addText(name, { size: 14, style: 'bold', gap: 0 });
+document.getElementById("clearFormatting").addEventListener("click", () => {
+  runCommand("removeFormat");
+  markDirty();
+});
 
-      doc.save('letter.pdf');
-    }
+document.getElementById("insertLink").addEventListener("change", (event) => {
+  const url = event.target.value.trim();
+  if (!url) {
+    return;
+  }
 
-    document.getElementById('letterDate').value =
-      new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  runCommand("createLink", url);
+  event.target.value = "";
+  markDirty();
+});
+
+document.getElementById("insertImage").addEventListener("change", (event) => {
+  const [file] = event.target.files;
+  if (!file) {
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    focusEditor();
+    document.execCommand("insertImage", false, reader.result);
+    markDirty();
+  };
+  reader.readAsDataURL(file);
+});
+
+documentNameInput.addEventListener("input", () => {
+  syncDocumentTitle();
+  markDirty();
+});
+
+editorPage.addEventListener("input", markDirty);
+
+syncDocumentTitle();
+setFontSize(currentFontSize);
+editorPage.style.lineHeight = lineSpacing.value;
+lineSpacingValue.textContent = `${lineSpacing.value}x`;
