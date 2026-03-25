@@ -3,171 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Editor Scaffold</title>
+  <title>Undo Button Study</title>
   <link rel="stylesheet" href="main.css">
   <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-block">
-        <p class="eyebrow">Editor Scaffold</p>
-        <h1>Document workspace</h1>
-      </div>
-
-      <div class="top-controls">
-        <label class="top-control document-name">
-          <span>Document name</span>
-          <input id="documentName" type="text" value="Untitled document" placeholder="Untitled document">
-        </label>
-
-        <button id="saveButton" class="top-action" type="button">Save</button>
-        <button id="printButton" class="top-action" type="button">Print</button>
-      </div>
-    </header>
-
-    <main class="editor-layout">
-      <aside class="tool-column tool-column-left" aria-label="Left editing controls">
-        <button id="undoButton" class="tool-card" type="button">
-          <span class="tool-icon">UN</span>
-          <span class="tool-label">Undo</span>
-        </button>
-
-        <button id="redoButton" class="tool-card" type="button">
-          <span class="tool-icon">RE</span>
-          <span class="tool-label">Redo</span>
-        </button>
-
-        <label class="tool-card" for="fontFamily">
-          <span class="tool-icon">Ff</span>
-          <span class="tool-label">Font family</span>
-          <select id="fontFamily">
-            <option value="Georgia, serif">Georgia</option>
-            <option value="'Times New Roman', serif">Times New Roman</option>
-            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-            <option value="'Courier New', monospace">Courier New</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-          </select>
-        </label>
-
-        <div class="tool-card">
-          <span class="tool-icon">SZ</span>
-          <span class="tool-label">Font size</span>
-          <div class="tool-pair">
-            <button id="fontSizeDown" type="button">Down</button>
-            <button id="fontSizeUp" type="button">Up</button>
-          </div>
+  <div class="workspace">
+    <main class="document-stage">
+      <header class="document-header">
+        <div class="header-copy">
+          <h1>UNDO PLAYGROUND</h1>
+          <button class="undo-button undo-01 undo-title-button" type="button" data-undo-button><span>UNDO</span></button>
         </div>
+      </header>
 
-        <label class="tool-card toggle-card" for="boldToggle">
-          <span class="tool-icon">B</span>
-          <span class="tool-label">Bold</span>
-          <input id="boldToggle" type="checkbox">
-        </label>
-
-        <label class="tool-card toggle-card" for="italicToggle">
-          <span class="tool-icon">I</span>
-          <span class="tool-label">Italic</span>
-          <input id="italicToggle" type="checkbox">
-        </label>
-
-        <label class="tool-card toggle-card" for="underlineToggle">
-          <span class="tool-icon">U</span>
-          <span class="tool-label">Underline</span>
-          <input id="underlineToggle" type="checkbox">
-        </label>
-
-        <label class="tool-card" for="highlightColor">
-          <span class="tool-icon">BG</span>
-          <span class="tool-label">Highlight</span>
-          <input id="highlightColor" type="color" value="#fff2a8">
-        </label>
-
-        <label class="tool-card" for="textColor">
-          <span class="tool-icon">TC</span>
-          <span class="tool-label">Text color</span>
-          <input id="textColor" type="color" value="#1a1a1a">
-        </label>
-
-        <div class="tool-card radio-card">
-          <span class="tool-icon">AL</span>
-          <span class="tool-label">Alignment</span>
-          <label><input type="radio" name="alignment" value="left" checked> Left</label>
-          <label><input type="radio" name="alignment" value="center"> Center</label>
-          <label><input type="radio" name="alignment" value="right"> Right</label>
-        </div>
-      </aside>
-
-      <section class="document-stage" aria-label="Document canvas">
-        <div class="page-chrome">
-          <div class="page-meta">
-            <span id="pageTitle">Untitled document</span>
-            <span id="saveStatus">Not saved</span>
-          </div>
-
-          <article
-            id="editorPage"
-            class="editor-page"
-            contenteditable="true"
-            spellcheck="true"
-            data-placeholder="Start writing here..."
-          ></article>
-        </div>
-      </section>
-
-      <aside class="tool-column tool-column-right" aria-label="Right editing controls">
-        <label class="tool-card" for="lineSpacing">
-          <span class="tool-icon">LS</span>
-          <span class="tool-label">Line spacing</span>
-          <input id="lineSpacing" type="range" min="1" max="3" step="0.1" value="1.5">
-          <output id="lineSpacingValue" for="lineSpacing">1.5x</output>
-        </label>
-
-        <label class="tool-card toggle-card" for="checklistToggle">
-          <span class="tool-icon">CL</span>
-          <span class="tool-label">Checklist</span>
-          <input id="checklistToggle" type="checkbox">
-        </label>
-
-        <label class="tool-card toggle-card" for="bulletToggle">
-          <span class="tool-icon">BL</span>
-          <span class="tool-label">Bullet list</span>
-          <input id="bulletToggle" type="checkbox">
-        </label>
-
-        <label class="tool-card toggle-card" for="numberToggle">
-          <span class="tool-icon">NL</span>
-          <span class="tool-label">Number list</span>
-          <input id="numberToggle" type="checkbox">
-        </label>
-
-        <div class="tool-card">
-          <span class="tool-icon">IN</span>
-          <span class="tool-label">Indent</span>
-          <div class="tool-pair">
-            <button id="indentDecrease" type="button">Decrease</button>
-            <button id="indentIncrease" type="button">Increase</button>
-          </div>
-        </div>
-
-        <button id="clearFormatting" class="tool-card" type="button">
-          <span class="tool-icon">CF</span>
-          <span class="tool-label">Clear formatting</span>
-        </button>
-
-        <label class="tool-card" for="insertImage">
-          <span class="tool-icon">IM</span>
-          <span class="tool-label">Insert image</span>
-          <input id="insertImage" type="file" accept="image/*">
-        </label>
-
-        <label class="tool-card" for="insertLink">
-          <span class="tool-icon">LK</span>
-          <span class="tool-label">Insert link</span>
-          <input id="insertLink" type="url" placeholder="https://example.com">
-        </label>
-      </aside>
+      <article
+        id="editorPage"
+        class="document-page"
+        contenteditable="true"
+        spellcheck="true"
+        data-placeholder="Type here, then click any undo button."
+      ></article>
     </main>
+
+    <div class="button-scatter" aria-label="Scattered undo button studies">
+      <button class="undo-button undo-02 scatter-02" type="button" data-undo-button aria-label="Undo 02"></button>
+      <button class="undo-button undo-03 scatter-03" type="button" data-undo-button><span>UNDO</span></button>
+      <button class="undo-button undo-04 scatter-04" type="button" data-undo-button><span>Undo 04</span></button>
+      <button class="undo-button undo-05 scatter-05" type="button" data-undo-button><span>Undo 05</span></button>
+      <button class="undo-button undo-06 scatter-06" type="button" data-undo-button><span>Undo 06</span></button>
+      <button class="undo-button undo-07 scatter-07" type="button" data-undo-button><span>Undo 07</span></button>
+      <button class="undo-button undo-08 scatter-08" type="button" data-undo-button><span>Undo 08</span></button>
+      <button class="undo-button undo-09 scatter-09" type="button" data-undo-button><span>Undo 09</span></button>
+      <button class="undo-button undo-10 scatter-10" type="button" data-undo-button><span>Undo 10</span></button>
+      <button class="undo-button undo-11 scatter-11" type="button" data-undo-button><span>Undo 11</span></button>
+      <button class="undo-button undo-12 scatter-12" type="button" data-undo-button><span>Undo 12</span></button>
+      <button class="undo-button undo-13 scatter-13" type="button" data-undo-button><span>Undo 13</span></button>
+      <button class="undo-button undo-14 scatter-14" type="button" data-undo-button><span>Undo 14</span></button>
+      <button class="undo-button undo-15 scatter-15" type="button" data-undo-button><span>Undo 15</span></button>
+      <button class="undo-button undo-16 scatter-16" type="button" data-undo-button><span>Undo 16</span></button>
+      <button class="undo-button undo-17 scatter-17" type="button" data-undo-button><span>Undo 17</span></button>
+      <button class="undo-button undo-18 scatter-18" type="button" data-undo-button><span>Undo 18</span></button>
+      <button class="undo-button undo-19 scatter-19" type="button" data-undo-button><span>Undo 19</span></button>
+      <button class="undo-button undo-20 scatter-20" type="button" data-undo-button><span>Undo 20</span></button>
+      <button class="undo-button undo-21 scatter-21" type="button" data-undo-button><span>Undo 21</span></button>
+      <button class="undo-button undo-22 scatter-22" type="button" data-undo-button><span>Undo 22</span></button>
+      <button class="undo-button undo-23 scatter-23" type="button" data-undo-button><span>Undo 23</span></button>
+      <button class="undo-button undo-24 scatter-24" type="button" data-undo-button><span>Undo 24</span></button>
+      <button class="undo-button undo-25 scatter-25" type="button" data-undo-button><span>Undo 25</span></button>
+    </div>
   </div>
 </body>
 </html>
