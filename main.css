@@ -8,6 +8,7 @@
   --document-gap: 20px;
   --rail-offset: 154px;
   --doc-half: 430px;
+  --left-arc-shift: 24px;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
 }
 
@@ -45,7 +46,7 @@ button {
 .workspace {
   position: relative;
   height: 100vh;
-  padding: 24px 40px;
+  padding: 40px 40px 24px;
   display: flex;
   justify-content: center;
 }
@@ -73,10 +74,79 @@ button {
 
 .document-header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-align: center;
+}
+
+.title-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  transform: translateY(-15px);
+}
+
+.title-lockup img {
+  display: block;
+  height: 72px;
+  width: auto;
+}
+
+.title-the {
+  color: transparent;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 5.02px;
+  -webkit-text-stroke: 1px #000000;
+  text-stroke: 1px #000000;
+}
+
+@keyframes undo-08-rainbow {
+  0% {
+    background: #ff003c;
+    color: #fff45e;
+  }
+
+  20% {
+    background: #ff7a00;
+    color: #ffffff;
+  }
+
+  40% {
+    background: #ffe600;
+    color: #2700d4;
+  }
+
+  60% {
+    background: #18d26b;
+    color: #ffffff;
+  }
+
+  80% {
+    background: #0047ff;
+    color: #ffffff;
+  }
+
+  100% {
+    background: #b100ff;
+    color: #ffffff;
+  }
+}
+
+@keyframes undo-15-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
 }
 
 .document-page {
@@ -131,21 +201,22 @@ button {
 .button-scatter .undo-button {
   position: absolute;
   pointer-events: auto;
+  transform: translate(-50%, -50%);
 }
 
-.scatter-14 { top: 10vh; left: calc(50% - var(--doc-half) - 300px); }
-.scatter-15 { top: 24vh; left: calc(50% - var(--doc-half) - 330px); }
-.scatter-20 { top: 40vh; left: calc(50% - var(--doc-half) - 360px); }
-.scatter-22 { top: 58vh; left: calc(50% - var(--doc-half) - 360px); }
-.scatter-24 { top: 76vh; left: calc(50% - var(--doc-half) - 330px); }
-.scatter-18 { top: 88vh; left: calc(50% - var(--doc-half) - 300px); }
+.scatter-14 { top: 10vh; left: calc(50% - var(--doc-half) - 300px + var(--left-arc-shift)); }
+.scatter-15 { top: 24vh; left: calc(50% - var(--doc-half) - 330px + var(--left-arc-shift)); }
+.scatter-20 { top: 40vh; left: calc(50% - var(--doc-half) - 360px + var(--left-arc-shift)); }
+.scatter-22 { top: 58vh; left: calc(50% - var(--doc-half) - 360px + var(--left-arc-shift)); }
+.scatter-24 { top: 76vh; left: calc(50% - var(--doc-half) - 330px + var(--left-arc-shift)); }
+.scatter-18 { top: 88vh; left: calc(50% - var(--doc-half) - 300px + var(--left-arc-shift)); }
 
-.scatter-02 { top: 16vh; left: calc(50% - var(--doc-half) - 190px); }
-.scatter-04 { top: 30vh; left: calc(50% - var(--doc-half) - 220px); }
-.scatter-03 { top: 44vh; left: calc(50% - var(--doc-half) - 235px); }
-.scatter-05 { top: 58vh; left: calc(50% - var(--doc-half) - 235px); }
-.scatter-06 { top: 72vh; left: calc(50% - var(--doc-half) - 220px); }
-.scatter-07 { top: 84vh; left: calc(50% - var(--doc-half) - 190px); }
+.scatter-02 { top: 16vh; left: calc(50% - var(--doc-half) - 190px + var(--left-arc-shift)); }
+.scatter-04 { top: 30vh; left: calc(50% - var(--doc-half) - 220px + var(--left-arc-shift)); }
+.scatter-03 { top: 44vh; left: calc(50% - var(--doc-half) - 235px + var(--left-arc-shift)); }
+.scatter-05 { top: 58vh; left: calc(50% - var(--doc-half) - 235px + var(--left-arc-shift)); }
+.scatter-06 { top: 72vh; left: calc(50% - var(--doc-half) - 220px + var(--left-arc-shift)); }
+.scatter-07 { top: 84vh; left: calc(50% - var(--doc-half) - 190px + var(--left-arc-shift)); }
 
 .scatter-16 { top: 10vh; left: calc(50% + var(--doc-half) + 242px); }
 .scatter-17 { top: 24vh; left: calc(50% + var(--doc-half) + 272px); }
@@ -212,28 +283,48 @@ button {
 }
 
 .undo-02 {
-  width: 82px;
-  height: 82px;
+  width: 104px;
+  height: 104px;
   justify-self: center;
   align-self: center;
+  overflow: visible;
   background-image: url("GLASS_VARIANT_01.svg");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 82px 82px;
+  background-size: 104px 104px;
 }
 
-.undo-02:hover {
-  width: 82px;
-  height: 82px;
+.undo-02::before,
+.undo-02::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 104px 104px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+}
+
+.undo-02::before {
   background-image: url("GLASS_VARIANT_02.svg");
-  background-size: 82px 82px;
 }
 
-.undo-02:active {
-  width: 82px;
-  height: 82px;
+.undo-02::after {
   background-image: url("GLASS_VARIANT_03.svg");
-  background-size: 82px 82px;
+}
+
+.undo-02:hover::before {
+  opacity: 1;
+}
+
+.undo-02:active::before {
+  opacity: 0;
+}
+
+.undo-02:active::after {
+  opacity: 1;
 }
 
 .undo-03 {
@@ -275,17 +366,42 @@ button {
 
 .undo-07:active {}
 
-.undo-08 {}
+.undo-08 {
+  width: 124px;
+  border-radius: 104px;
+  background: #2700d4;
+  box-shadow: 7px 4px 11.7px 1px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
 
-.undo-08:hover {}
+.undo-08:hover {
+  animation: undo-08-rainbow 240ms steps(1, end) infinite;
+}
 
-.undo-08:active {}
+.undo-08:active {
+  animation: none;
+  background: #ffffff;
+  color: #000000;
+}
 
-.undo-09 {}
+.undo-09 {
+  width: 96px;
+  height: 96px;
+  background-image: url("UNDO09_1.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-09:hover {}
 
-.undo-09:active {}
+.undo-09:active {
+  background-image: url("UNDO09_2.png");
+}
 
 .undo-10 {}
 
@@ -317,11 +433,43 @@ button {
 
 .undo-14:active {}
 
-.undo-15 {}
+.undo-15 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 112px;
+  height: 34px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #ff362b34;
+}
 
-.undo-15:hover {}
+.undo-15-label {
+  width: auto;
+  height: auto;
+  display: block;
+  line-height: 20px;
+  font-size: 17px;
+  color: #ff342b;
+  letter-spacing: 1px;
+}
 
-.undo-15:active {}
+.undo-15:hover {
+  background: #ff362b52;
+}
+
+.undo-15:hover .undo-15-icon {
+  animation: undo-15-spin 2s linear infinite;
+}
+
+.undo-15:active {
+  background: #d82b2248;
+}
+
+.undo-15-icon {
+  flex: 0 0 auto;
+}
 
 .undo-16 {}
 
@@ -341,11 +489,20 @@ button {
 
 .undo-18:active {}
 
-.undo-19 {}
+.undo-19 {
+  width: 108px;
+  height: 108px;
+  background-image: url("UNDO19 3D_1.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-19:hover {}
 
-.undo-19:active {}
+.undo-19:active {
+  background-image: url("UNDO19 3D_2.png");
+}
 
 .undo-20 {}
 
@@ -359,7 +516,14 @@ button {
 
 .undo-21:active {}
 
-.undo-22 {}
+.undo-22 {
+  width: 104px;
+  height: 104px;
+  background-image: url("CYBER GREEN.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-22:hover {}
 
