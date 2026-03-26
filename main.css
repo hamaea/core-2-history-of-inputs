@@ -46,7 +46,7 @@ button {
 .workspace {
   position: relative;
   height: 100vh;
-  padding: 40px 40px 24px;
+  padding: 44px 40px 24px;
   display: flex;
   justify-content: center;
 }
@@ -86,7 +86,7 @@ button {
   justify-content: center;
   gap: 14px;
   flex-wrap: wrap;
-  transform: translateY(-15px);
+  transform: translateY(-12px);
 }
 
 .title-lockup img {
@@ -288,6 +288,7 @@ button {
   justify-self: center;
   align-self: center;
   overflow: visible;
+  transform: translate(-42%, -50%);
   background-image: url("GLASS_VARIANT_01.svg");
   background-position: center;
   background-repeat: no-repeat;
@@ -342,11 +343,24 @@ button {
 
 .undo-03:active {}
 
-.undo-04 {}
+.undo-04 {
+  width: 112px;
+  height: 112px;
+  filter:
+    drop-shadow(0 18px 24px rgba(0, 0, 0, 0.2))
+    drop-shadow(0 34px 42px rgba(0, 0, 0, 0.12));
+  background-image: url("UNDO04-01.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-04:hover {}
 
 .undo-04:active {}
+.undo-04:active {
+  background-image: url("UNDO04-02.png");
+}
 
 .undo-05 {}
 
@@ -427,11 +441,20 @@ button {
 
 .undo-13:active {}
 
-.undo-14 {}
+.undo-14 {
+  width: 108px;
+  height: 108px;
+  background-image: url("UNDO14 LOG-01.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-14:hover {}
 
-.undo-14:active {}
+.undo-14:active {
+  background-image: url("UNDO14 LOG-02.png");
+}
 
 .undo-15 {
   display: flex;
@@ -443,6 +466,7 @@ button {
   padding: 6px 12px;
   border-radius: 20px;
   background: #ff362b34;
+  transform: translate(-44%, -50%);
 }
 
 .undo-15-label {
@@ -483,11 +507,22 @@ button {
 
 .undo-17:active {}
 
-.undo-18 {}
+.undo-18 {
+  width: 104px;
+  height: 104px;
+  background-image: url("UNDO18-01.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
-.undo-18:hover {}
+.undo-18:hover {
+  background-image: url("UNDO18-02.png");
+}
 
-.undo-18:active {}
+.undo-18:active {
+  background-image: url("UNDO18-03.png");
+}
 
 .undo-19 {
   width: 108px;
@@ -535,17 +570,57 @@ button {
 
 .undo-23:active {}
 
-.undo-24 {}
+.undo-24 {
+  width: 110px;
+  height: 110px;
+  background-image: url("UNDO24-01.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 
 .undo-24:hover {}
 
 .undo-24:active {}
 
-.undo-25 {}
+.undo-25 {
+  width: 128px;
+  height: 84px;
+  padding: 10px 12px;
+  border: 2px solid #5e0000;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #5b0000 0%, #340000 52%, #190000 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 110, 110, 0.15),
+    0 8px 18px rgba(35, 0, 0, 0.28);
+}
 
-.undo-25:hover {}
+.undo-25 span {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  line-height: 0.95;
+  text-align: center;
+  color: #ff8a8a;
+  font-family: "OCR A Std", "Eurostile", "Arial Narrow", monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(255, 80, 80, 0.28);
+}
 
-.undo-25:active {}
+.undo-25:hover {
+  background:
+    linear-gradient(180deg, #6e0000 0%, #3f0000 52%, #220000 100%);
+}
+
+.undo-25:active {
+  background:
+    linear-gradient(180deg, #320000 0%, #240000 52%, #120000 100%);
+}
 
 @media (max-width: 980px) {
   .workspace {
